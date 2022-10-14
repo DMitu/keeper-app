@@ -1,25 +1,51 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import CreateArea from './components/CreateArea';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Note from "./components/Note";
+
+
+
+
+function App(){
+
+  const [notes, setNotes] = useState([]);
+
+  function addNote ({title, content}) {
+    if(title.length > 0 && content.length) {
+      setNotes(prev => [{title, content},...prev]);
+    }
+    
+  }
+
+  function deleteNote(id){
+    setNotes((prevNotes) => {
+      return prevNotes.filter((noteItem, index) => {
+       return index !== id;
+      });
+    });
+
+  }
+
+  return <React.StrictMode>
+  <Header />
+  <CreateArea 
+    onAdd={addNote}
+  />
+  {notes.map((noteItem, index) => {
+    return <Note 
+      key={index}
+      id={index}
+      title={noteItem.title}
+      content={noteItem.content}
+      onDelete={deleteNote}
+    />
+  })}
+  
+  <Footer />
+</React.StrictMode>
 }
 
 export default App;
